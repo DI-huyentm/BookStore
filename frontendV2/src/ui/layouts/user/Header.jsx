@@ -20,7 +20,7 @@ import {
 } from "@mui/icons-material";
 
 import { Link } from "react-router-dom";
-// import { useAuth } from "../../../contexts/AuthContext";
+import { useAuth } from "../../../contexts/AuthContext";
 import { useSocket } from "../../../contexts/SocketContext";
 import Notification from "../../../features/notifications/Notification";
 import UserMenuHeader from "../../sharedComponents/UserMenuHeader";
@@ -33,6 +33,8 @@ function ResponsiveAppBar() {
   const [isNotificationOpen, setNotificationOpen] = React.useState(false);
   // const { notifications, handleReadAllNotifications } = useSocket();
   const [isCartOpen, setIsCartOpen] = React.useState(false);
+
+  const { isAuthenticated } = useAuth();
 
   const { cartItems } = useCart();
 
@@ -190,7 +192,7 @@ function ResponsiveAppBar() {
             </Badge>
           </IconButton>
 
-          {/* {!isAuthenticated && (
+          {!isAuthenticated && (
             <Box sx={{ flexGrow: 0 }}>
               <Button
                 component={Link}
@@ -210,7 +212,7 @@ function ResponsiveAppBar() {
                 Đăng kí
               </Button>
             </Box>
-          )} */}
+          )}
         </Toolbar>
         {/* {isAuthenticated && (
           <Box>

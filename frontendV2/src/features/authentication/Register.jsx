@@ -36,10 +36,10 @@ function Register() {
       data.password,
       data.confirmPassword,
       data.name,
-      isAgent ? "agent" : "user"
+      "user"
     );
     navigate("/login");
-    setIsAgent(false);
+    // setIsAgent(false);
   };
 
   return (
