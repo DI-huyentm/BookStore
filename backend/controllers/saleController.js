@@ -1,13 +1,13 @@
 const {
-    Genre,
-    Book,
-    BookGenre,
-    Sale,
-    SaleDetail,
-    User,
-    sequelize,
-    QueryTypes,
-    Op,
+  Genre,
+  Book,
+  BookGenre,
+  Sale,
+  SaleDetail,
+  User,
+  sequelize,
+  QueryTypes,
+  Op,
 } = require("../models/index");
 
 // exports.getAllSales = async (req, res) => {
@@ -28,79 +28,78 @@ const {
 //     }
 //   };
 
-  exports.createSale = async (req, res) => {
-  
-    try {
-      const currentUser = req.user;
-            
-      if (!currentUser) {
-        return res.status(404).json({
-          status: "fail",
-          message:
-            "Please login to order.",
-        });
-      }
+exports.createSale = async (req, res) => {
+  try {
+    const { name, address, phoneNumber, cartItems, userId } = req.body;
 
-      // const { userId, total, address, phoneNumber } = req.body;
-      const { name, address, phoneNumber } = req.body;
-
-      if (address == null || phoneNumber == null || name == null) {
-        return res.status(400).json({
-          status: "fail",
-          message: "The request does not contain full information",
-        });
-      }
-
-      const newSale = await Sale.create({
-        userId: currentUser.id,
-        name,
-        address,
-        phoneNumber,        
-      });  
-      
-        
-      return res.status(200).json({
-        status: "success",
-        data: {
-          new_sale: newSale,
-        },
-      });
-    } catch (error) {
+    if (address == null || phoneNumber == null || name == null) {
       return res.status(400).json({
         status: "fail",
-        message: "Create sale fail...",
+        message: "The request does not contain full information",
       });
     }
-  };
 
-  // exports.createSaleDetail = async (req, res) => {
-  //   try {      
-  //     const { cartItems, total } = req.body;
-  //     let saleDetails = [];
+    const newSale = await Sale.create({
+      user_id: userId,
+      name,
+      address,
+      phoneNumber,
+    });
 
-  //     for (const cartItem of cartItems) {
-  //       const newSaleDetail = await SaleDetail.create({ 
-  //         sale_id: sale_id,
-  //         book_id: cartItem.id,
-  //         quantity: cartItem.quantity,
-  //         total,
-  //        });
-  //       saleDetails.push(newSaleDetail);
-  //     }
-  
-  //     return res.status(200).json({
-  //       status: "success",
-  //       data: {
-  //         saleDetailList: saleDetails,
-  //       },
-  //     });
-  // } catch (error) {
-  //   return res.status(400).json({
-  //     status: "fail",
-  //     message: "Create sale detail fail...",
-  //   });
-  // }
-  // };
+    // Using Promise.all to parallelize creation of sale details
+    await Promise.all(
+      cartItems.map(async (cartItem) => {
+        await SaleDetail.create({
+          sale_id: newSale.id,
+          book_id: cartItem.id,
+          quantity: cartItem.amount,
+        });
+      })
+    );
+
+    return res.status(200).json({
+      status: "success",
+      data: {
+        new_sale: newSale,
+      },
+    });
+  } catch (error) {
+    console.error("Error creating sale:", error);
+    return res.status(400).json({
+      status: "fail",
+      message: "Create sale failed.",
+    });
+  }
+};
+
+// exports.createSaleDetail = async (req, res) => {
+//   try {
+//     const { cartItems, total } = req.body;
+//     let saleDetails = [];
+
+//     for (const cartItem of cartItems) {
+//       const newSaleDetail = await SaleDetail.create({
+//         sale_id: sale_id,
+//         book_id: cartItem.id,
+//         quantity: cartItem.quantity,
+//         total,
+//        });
+//       saleDetails.push(newSaleDetail);
+//     }
+
+//     return res.status(200).json({
+//       status: "success",
+//       data: {
+//         saleDetailList: saleDetails,
+//       },
+//     });
+// } catch (error) {
+//   return res.status(400).json({
+//     status: "fail",
+//     message: "Create sale detail fail...",
+//   });
+// }
+// };
 
 // exports.createSale = async (req, res) => {
 //   try {
@@ -170,8 +169,6 @@ const {
 //   });
 // }
 // };
-
-
 
 // exports.updateSaleDetail = async (req, res) => {
 //   try {

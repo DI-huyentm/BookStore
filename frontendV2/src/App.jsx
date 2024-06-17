@@ -61,17 +61,21 @@ function App() {
       <QueryClientProvider client={queryClient}>
         <ReactQueryDevtools initialIsOpen={false} />
         <BrowserRouter>
-          <CartProvider>
-            <Routes>
-              <Route element={<AppLayouts />}>
-                <Route path="/" element={<Homepage />} />
-                <Route path="/payment" element={<PaymentStepper />} />
-              </Route>
+          <AuthProvider>
+            <CartProvider>
+              <Routes>
+                <Route element={<AppLayouts />}>
+                  <Route path="/" element={<Homepage />} />
+                  <Route path="/payment" element={<PaymentStepper />} />
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/signup" element={<Register />} />
+                </Route>
 
-              <Route path="/unauthorize" element={<Unauthorize />} />
-              <Route path="*" element={<NotFoundPage />} />
-            </Routes>
-          </CartProvider>
+                <Route path="/unauthorize" element={<Unauthorize />} />
+                <Route path="*" element={<NotFoundPage />} />
+              </Routes>
+            </CartProvider>
+          </AuthProvider>
         </BrowserRouter>
 
         <Toaster

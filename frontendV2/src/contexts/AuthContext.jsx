@@ -18,10 +18,10 @@ function AuthProvider({ children }) {
   const isAuthenticated = token && currentUser;
   const isAgent = currentUser?.role === "agent";
 
-  const handleLogin = async (gmail, password) => {
+  const handleLogin = async (email, password) => {
     try {
       const response = await axios.post(`${BASE_URL}/login`, {
-        gmail,
+        email,
         password,
       });
 
@@ -39,7 +39,7 @@ function AuthProvider({ children }) {
   };
 
   const handleSignup = async (
-    gmail,
+    email,
     password,
     confirmPassword,
     name,
@@ -47,7 +47,7 @@ function AuthProvider({ children }) {
   ) => {
     try {
       const response = await axios.post(`${BASE_URL}/signup`, {
-        gmail,
+        email,
         password,
         confirmPassword,
         name,

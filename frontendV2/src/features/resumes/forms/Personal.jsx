@@ -16,7 +16,7 @@ import SaveButton from "../../../ui/inputs/SaveButton";
 
 const icons = [PhoneIcon, EmailIcon, HomeIcon];
 
-function Personal() {
+function Personal({ information, setInformation }) {
   const {
     register,
     handleSubmit,
@@ -27,6 +27,11 @@ function Personal() {
 
   const onSubmit = (data) => {
     toast.success("Đã lưu thông tin cá nhân");
+    setInformation({
+      name: data.name,
+      address: data.address,
+      phoneNumber: data.contacts[0].value,
+    });
   };
 
   return (
