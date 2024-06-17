@@ -12,67 +12,110 @@ const {
 
 exports.getAllSales = async (req, res) => {
   try {
-      const sales = await Sale.findAll();
-      return res.status(200).json({
-          status: "success",
-          results: sales.length,
-          data: {
-              sales,
-          },
-      });
+    const sales = await Sale.findAll();
+    return res.status(200).json({
+      status: "success",
+      results: sales.length,
+      data: {
+        sales,
+      },
+    });
   } catch (error) {
-      console.error("Error fetching sales:", error);
-      return res.status(400).json({
-          status: "fail",
-          message: "Failed to fetch sales.",
-      });
+    console.error("Error fetching sales:", error);
+    return res.status(400).json({
+      status: "fail",
+      message: "Failed to fetch sales.",
+    });
+  }
+};
+
+exports.getAllSalesByUserId = async (req, res) => {
+  try {
+    const sales = await Sale.findAll({
+      where: { user_id: req.params.id },
+      include: [
+        {
+          model: SaleDetail,
+          include: [
+            {
+              model: Book,
+              include: [
+                {
+                  model: BookGenre,
+                  include: [
+                    {
+                      model: Genre,
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    });
+
+    return res.status(200).json({
+      status: "success",
+      results: sales.length,
+
+      data: {
+        sales,
+      },
+    });
+  } catch (error) {
+    console.error("Error fetching sales:", error);
+    return res.status(400).json({
+      status: "fail",
+      message: "Failed to fetch sales.",
+    });
   }
 };
 
 exports.createSale = async (req, res) => {
   try {
-      const { name, address, phoneNumber, cartItems, userId } = req.body;
+    const { name, address, phoneNumber, cartItems, userId } = req.body;
 
-      // Validate required fields
-      if (!name || !address || !phoneNumber) {
-          return res.status(400).json({
-              status: "fail",
-              message: "The request does not contain full information",
-          });
-      }
-
-      // Create new sale
-      const newSale = await Sale.create({
-          user_id: userId,
-          name,
-          phoneNumber,
-          address,
-          date: new Date(), // Assuming you want to use the current date
-      });
-
-      // Create sale details (items in the cart)
-      await Promise.all(
-          cartItems.map(async (cartItem) => {
-              await SaleDetail.create({
-                  sale_id: newSale.id,
-                  book_id: cartItem.id,
-                  quantity: cartItem.amount,
-              });
-          })
-      );
-
-      return res.status(200).json({
-          status: "success",
-          data: {
-              new_sale: newSale,
-          },
-      });
-  } catch (error) {
-      console.error("Error creating sale:", error);
+    // Validate required fields
+    if (!name || !address || !phoneNumber) {
       return res.status(400).json({
-          status: "fail",
-          message: "Create sale failed.",
+        status: "fail",
+        message: "The request does not contain full information",
       });
+    }
+
+    // Create new sale
+    const newSale = await Sale.create({
+      user_id: userId,
+      name,
+      phoneNumber,
+      address,
+      date: new Date(), // Assuming you want to use the current date
+    });
+
+    // Create sale details (items in the cart)
+    await Promise.all(
+      cartItems.map(async (cartItem) => {
+        await SaleDetail.create({
+          sale_id: newSale.id,
+          book_id: cartItem.id,
+          quantity: cartItem.amount,
+        });
+      })
+    );
+
+    return res.status(200).json({
+      status: "success",
+      data: {
+        new_sale: newSale,
+      },
+    });
+  } catch (error) {
+    console.error("Error creating sale:", error);
+    return res.status(400).json({
+      status: "fail",
+      message: "Create sale failed.",
+    });
   }
 };
 

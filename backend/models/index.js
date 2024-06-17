@@ -32,7 +32,6 @@ db.SaleDetail = require("./saledetailModel")(sequelize, DataTypes, Model);
 db.Genre = require("./genreModel")(sequelize, DataTypes, Model);
 db.BookGenre = require("./bookgenreModel")(sequelize, DataTypes, Model);
 
-
 // // Define the relations between many models
 
 db.SaleDetail.belongsTo(db.Sale, {
@@ -51,6 +50,10 @@ db.Sale.belongsTo(db.User, {
   foreignKey: "user_id",
   onDelete: "CASCADE",
   onUpdate: "CASCADE",
+});
+
+db.Sale.hasMany(db.SaleDetail, {
+  foreignKey: "sale_id",
 });
 
 db.BookGenre.belongsTo(db.Book, {

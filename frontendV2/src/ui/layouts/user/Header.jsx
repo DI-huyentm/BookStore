@@ -19,13 +19,15 @@ import {
   MenuBook as MenuBookIcon,
 } from "@mui/icons-material";
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../contexts/AuthContext";
 import { useSocket } from "../../../contexts/SocketContext";
 import Notification from "../../../features/notifications/Notification";
 import UserMenuHeader from "../../sharedComponents/UserMenuHeader";
 import { useCart } from "../../../contexts/CartContext";
 import CartList from "../../../features/cart/Cart";
+import HistoryIcon from "@mui/icons-material/History";
+import LogoutIcon from "@mui/icons-material/Logout";
 
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -34,7 +36,9 @@ function ResponsiveAppBar() {
   // const { notifications, handleReadAllNotifications } = useSocket();
   const [isCartOpen, setIsCartOpen] = React.useState(false);
 
-  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+
+  const { isAuthenticated, handleLogout } = useAuth();
 
   const { cartItems } = useCart();
 
@@ -179,6 +183,21 @@ function ResponsiveAppBar() {
             />
           )} */}
 
+          {isAuthenticated && (
+            <IconButton
+              size="large"
+              aria-label="history"
+              aria-controls="menu-appbar"
+              aria-haspopup="true"
+              onClick={() => {
+                navigate("/history");
+              }}
+              color="white"
+            >
+              <HistoryIcon sx={{ color: "white" }} />
+            </IconButton>
+          )}
+
           <IconButton
             size="large"
             aria-label="cart"
@@ -212,6 +231,19 @@ function ResponsiveAppBar() {
                 Đăng kí
               </Button>
             </Box>
+          )}
+
+          {isAuthenticated && (
+            <IconButton
+              size="large"
+              aria-label="logout"
+              aria-controls="menu-appbar"
+              aria-haspopup="true"
+              color="white"
+              onClick={handleLogout}
+            >
+              <LogoutIcon sx={{ color: "white" }} />
+            </IconButton>
           )}
         </Toolbar>
         {/* {isAuthenticated && (

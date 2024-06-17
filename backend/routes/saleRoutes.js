@@ -4,10 +4,9 @@ const saleController = require("../controllers/saleController");
 
 const router = express.Router();
 
-router.get(
-    "/",
-    saleController.getAllSales
-    );
+router.get("/", saleController.getAllSales);
+
+router.get("/:id", saleController.getAllSalesByUserId);
 
 router.post("/", saleController.createSale);
 
