@@ -11,12 +11,7 @@ const router = express.Router();
 //     saleController.getAllSales
 //     );
 
-router.post(
-    "/",
-    authController.protect,
-    authController.restrictTo("admin", "user"),
-    saleController.createSale
-    );
+router.post("/", saleController.createSale);
 
 // router.delete(
 //     "/:id",
@@ -38,14 +33,13 @@ router.post(
 //     authController.restrictTo("admin", "user"),
 //     saleController.createSaleDetail
 //     );
-        
+
 // router.patch(
 //     "/detail/:id",
 //     authController.protect,
 //     //authController.restrictTo("admin"),
 //     saleController.updateSaleDetail
 //     );
-
 
 // router.delete(
 //     "/detail/:id",

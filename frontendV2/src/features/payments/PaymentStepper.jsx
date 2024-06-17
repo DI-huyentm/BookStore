@@ -13,27 +13,41 @@ import CartPaper from "../cart/CartPaper";
 import Personal from "../resumes/forms/Personal";
 import toast from "react-hot-toast";
 import TitleText from "../../ui/sharedComponents/TitleText";
+import { useCart } from "../../contexts/CartContext";
+import { useCreatePayment } from "./createPayment";
+import { useAuth } from "../../contexts/AuthContext";
 
 const steps = ["Thông tin đơn hàng", "Thông tin cá nhân"];
-
-function displayStepContent(step) {
-  switch (step) {
-    case 0:
-      return <CartPaper />;
-
-    case 1:
-      return <Personal />;
-  }
-}
 
 function PaymentStepper() {
   const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set());
+  const [information, setInformation] = React.useState({
+    name: "",
+    address: "",
+    phoneNumber: "",
+  });
   const navigate = useNavigate();
+  const { cartItems } = useCart();
+  const { createPayment, isCreating } = useCreatePayment();
+  const { currentUser } = useAuth();
+  // Make a state for information that related to <Personal /> component
 
   const isStepSkipped = (step) => {
     return skipped.has(step);
   };
+
+  function displayStepContent(step) {
+    switch (step) {
+      case 0:
+        return <CartPaper />;
+
+      case 1:
+        return (
+          <Personal information={information} setInformation={setInformation} />
+        );
+    }
+  }
 
   const handleNext = () => {
     let newSkipped = skipped;
@@ -54,8 +68,9 @@ function PaymentStepper() {
     setActiveStep(0);
   };
 
-  const handleComplete = () => {
-    toast.success("Đã đặt hàng thành công");
+  const handleComplete = async () => {
+    const saleObject = { ...information, cartItems, userId: currentUser.id };
+    await createPayment(saleObject);
     navigate("/");
   };
 
@@ -104,7 +119,9 @@ function PaymentStepper() {
             )}
 
             {activeStep === steps.length - 1 && (
-              <Button onClick={handleComplete}>Hoàn tất</Button>
+              <Button onClick={handleComplete} disabled={isCreating}>
+                Hoàn tất
+              </Button>
             )}
           </Box>
         </>
