@@ -69,7 +69,12 @@ function PaymentStepper() {
   };
 
   const handleComplete = async () => {
-    const saleObject = { ...information, cartItems, userId: currentUser.id };
+    console.log(cartItems)
+    let total = 0;
+    for (let i = 0; i < cartItems.length; i++) {
+      total += cartItems[i].price * cartItems[i].amount
+    }
+    const saleObject = { ...information, cartItems, userId: currentUser.id, total };
     await createPayment(saleObject);
     navigate("/");
   };

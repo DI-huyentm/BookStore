@@ -83,6 +83,9 @@ const PaymentHistory = () => {
             <Typography variant="subtitle2">
               Phone Number: {sale.phoneNumber}
             </Typography>
+            <Typography variant="subtitle2">
+              Total: {sale.total} VND
+            </Typography>
             <List>
               {sale.SaleDetails.map((detail) => (
                 <ListItem key={detail.id} className={classes.listItem}>
@@ -108,7 +111,7 @@ const PaymentHistory = () => {
                           className={classes.inline}
                           color="textPrimary"
                         >
-                          Price: ${detail.Book.price / 100}{" "}
+                          Price: {detail.Book.price}{" VND"}
                           {/* Assuming price is in cents */}
                         </Typography>
                       </>

@@ -137,7 +137,7 @@ function Login() {
             </Grid>
 
             <Grid item>
-              <MuiLink href="#" variant="body2">
+              <MuiLink href="/signup" variant="body2">
                 {"Don't have an account? Sign Up"}
               </MuiLink>
             </Grid>

@@ -74,7 +74,7 @@ exports.getAllSalesByUserId = async (req, res) => {
 
 exports.createSale = async (req, res) => {
   try {
-    const { name, address, phoneNumber, cartItems, userId } = req.body;
+    const { name, address, phoneNumber, cartItems, userId, total } = req.body;
 
     // Validate required fields
     if (!name || !address || !phoneNumber) {
@@ -91,6 +91,7 @@ exports.createSale = async (req, res) => {
       phoneNumber,
       address,
       date: new Date(), // Assuming you want to use the current date
+      total,
     });
 
     // Create sale details (items in the cart)

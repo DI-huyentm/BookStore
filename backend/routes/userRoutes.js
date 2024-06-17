@@ -11,4 +11,4 @@ router.put("/update", userController.updateUser);
 
 
 
-module.exports = router;
+module.exports = router;    

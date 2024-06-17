@@ -161,7 +161,7 @@ function Register() {
             )}
           />
 
-          <FormControlLabel
+          {/* <FormControlLabel
             control={
               <Checkbox
                 checked={isAgent}
@@ -171,7 +171,7 @@ function Register() {
               />
             }
             label="Register as Agent"
-          />
+          /> */}
 
           <Button
             type="submit"
@@ -190,7 +190,7 @@ function Register() {
             </Grid>
 
             <Grid item>
-              <MuiLink href="#" variant="body2">
+              <MuiLink href="/login" variant="body2">
                 {"Already have an account? Sign in"}
               </MuiLink>
             </Grid>

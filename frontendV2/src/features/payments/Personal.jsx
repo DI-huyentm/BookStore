@@ -1,6 +1,4 @@
-function Personal() {
-    return ( 
-        import { useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { Box, Grid } from "@mui/material";
 import {
@@ -67,33 +65,20 @@ function Personal() {
             />
           </Grid>
 
-          {icons.map((Icon, index) => (
-            <Grid
-              container
-              item
-              xs={12}
-              md={6}
-              justifyContent="center"
-              key={index}
-            >
-              <ControlledTextField
-                id={`contacts[${index}].value`}
-                name={`contacts[${index}].value`}
-                label={
-                  index === 0
-                    ? "Số điện thoại"
-                    : index === 1
-                    ? "Email"
-                    : "Địa chỉ nhà"
-                }
-                register={register}
-                errors={errors}
-                InputProps={{
-                  startAdornment: <Icon style={{ color: "grey" }} />,
-                }}
-              />
-            </Grid>
-          ))}
+          
+    
+          <Grid container item xs={12} md={6} justifyContent="center">
+            <ControlledTextField
+              id="contacts[0].value"
+              name="contacts[0].value"
+              label="Số điện thoại"
+              register={register}
+              errors={errors}
+              InputProps={{
+                startAdornment: <PhoneIcon style={{ color: "grey" }} />,
+              }}
+            />
+          </Grid>
 
           <Grid container item xs={12} md={12} justifyContent="flex-end">
             <SaveButton type="submit" />
@@ -102,11 +87,6 @@ function Personal() {
       </Box>
     </ResumeCard>
   );
-}
-
-export default Personal;
-
-     );
 }
 
 export default Personal;
