@@ -1,8 +1,10 @@
-module.exports = (sequelize, DataTypes, Model) => {
+// models/saledetailModel.js
+const { DataTypes, Model } = require('sequelize');
+
+module.exports = (sequelize) => {
   class SaleDetail extends Model {}
   SaleDetail.init(
     {
-      // Model attributes are defined here
       id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
@@ -22,11 +24,12 @@ module.exports = (sequelize, DataTypes, Model) => {
       },
     },
     {
-      // Other model options go here
-      sequelize, // We need to pass the connection instance
-      modelName: "SaleDetail", // We need to choose the model name
+      sequelize,
+      modelName: 'SaleDetail',
+      tableName: 'saledetails', // Ensure Sequelize uses 'saledetails' table
       timestamps: false,
     }
   );
+
   return SaleDetail;
 };

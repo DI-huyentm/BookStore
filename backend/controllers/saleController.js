@@ -10,65 +10,69 @@ const {
   Op,
 } = require("../models/index");
 
-// exports.getAllSales = async (req, res) => {
-//     try {
-//         const sales = await Sale.findAll();
-//         return res.status(200).json({
-//           status: "success",
-//           results: sales.length,
-//           data: {
-//             sales,
-//           },
-//         });
-//     } catch (error) {
-//       return res.status(400).json({
-//         status: "fail",
-//         message: "Get all sales fail...",
-//       });
-//     }
-//   };
+exports.getAllSales = async (req, res) => {
+  try {
+      const sales = await Sale.findAll();
+      return res.status(200).json({
+          status: "success",
+          results: sales.length,
+          data: {
+              sales,
+          },
+      });
+  } catch (error) {
+      console.error("Error fetching sales:", error);
+      return res.status(400).json({
+          status: "fail",
+          message: "Failed to fetch sales.",
+      });
+  }
+};
 
 exports.createSale = async (req, res) => {
   try {
-    const { name, address, phoneNumber, cartItems, userId } = req.body;
+      const { name, address, phoneNumber, cartItems, userId } = req.body;
 
-    if (address == null || phoneNumber == null || name == null) {
-      return res.status(400).json({
-        status: "fail",
-        message: "The request does not contain full information",
+      // Validate required fields
+      if (!name || !address || !phoneNumber) {
+          return res.status(400).json({
+              status: "fail",
+              message: "The request does not contain full information",
+          });
+      }
+
+      // Create new sale
+      const newSale = await Sale.create({
+          user_id: userId,
+          name,
+          phoneNumber,
+          address,
+          date: new Date(), // Assuming you want to use the current date
       });
-    }
 
-    const newSale = await Sale.create({
-      user_id: userId,
-      name,
-      address,
-      phoneNumber,
-    });
+      // Create sale details (items in the cart)
+      await Promise.all(
+          cartItems.map(async (cartItem) => {
+              await SaleDetail.create({
+                  sale_id: newSale.id,
+                  book_id: cartItem.id,
+                  quantity: cartItem.amount,
+              });
+          })
+      );
 
-    // Using Promise.all to parallelize creation of sale details
-    await Promise.all(
-      cartItems.map(async (cartItem) => {
-        await SaleDetail.create({
-          sale_id: newSale.id,
-          book_id: cartItem.id,
-          quantity: cartItem.amount,
-        });
-      })
-    );
-
-    return res.status(200).json({
-      status: "success",
-      data: {
-        new_sale: newSale,
-      },
-    });
+      return res.status(200).json({
+          status: "success",
+          data: {
+              new_sale: newSale,
+          },
+      });
   } catch (error) {
-    console.error("Error creating sale:", error);
-    return res.status(400).json({
-      status: "fail",
-      message: "Create sale failed.",
-    });
+      console.error("Error creating sale:", error);
+      return res.status(400).json({
+          status: "fail",
+          message: "Create sale failed.",
+      });
   }
 };
 
