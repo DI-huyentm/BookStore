@@ -32,6 +32,7 @@ import { SocketProvider } from "./contexts/SocketContext";
 import { CartProvider } from "./contexts/CartContext";
 import ExpectJobs from "./features/expectedJobs/ExpectJobs";
 import PaymentStepper from "./features/payments/PaymentStepper";
+import PaymentHistory from "./features/payments/PaymentHistory";
 
 const queryClient = new QueryClient();
 const theme = createTheme({
@@ -69,6 +70,14 @@ function App() {
                   <Route path="/payment" element={<PaymentStepper />} />
                   <Route path="/login" element={<Login />} />
                   <Route path="/signup" element={<Register />} />
+                  <Route
+                    path="/history"
+                    element={
+                      <ProtectedRoute>
+                        <PaymentHistory />
+                      </ProtectedRoute>
+                    }
+                  />
                 </Route>
 
                 <Route path="/unauthorize" element={<Unauthorize />} />
